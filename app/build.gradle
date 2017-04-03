@@ -26,6 +26,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
+
+    compile 'com.google.android:flexbox:0.2.6'  //see https://github.com/google/flexbox-layout
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.4.1'  //see https://github.com/Ashok-Varma/BottomNavigation
     testCompile 'junit:junit:4.12'
 }

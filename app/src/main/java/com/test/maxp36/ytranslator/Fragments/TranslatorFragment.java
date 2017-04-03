@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.test.maxp36.ytranslator.Key;
 import com.test.maxp36.ytranslator.R;
 
@@ -326,7 +327,8 @@ public class TranslatorFragment extends Fragment {
 
             dictionaryArticleView.removeAllViews();
 
-            LinearLayoutCompat horisontalContainer = new LinearLayoutCompat(getContext());
+            //LinearLayoutCompat horisontalContainer = new LinearLayoutCompat(getContext());
+            FlexboxLayout horisontalContainer = new FlexboxLayout(getContext());
             AppCompatTextView elem;
 
             String gen = "";
@@ -343,7 +345,8 @@ public class TranslatorFragment extends Fragment {
                         && !entry.getKey().getKey().equals("gen")
                         && !entry.getKey().getKey().equals("pos")
                         && !entry.getKey().getKey().equals("num")) {
-                    horisontalContainer = new LinearLayoutCompat(getContext());
+                    //horisontalContainer = new LinearLayoutCompat(getContext());
+                    horisontalContainer = new FlexboxLayout(getContext());
                 }
 
                 /*if (entry.getKey().getKey().equals("mean")) {
@@ -379,11 +382,20 @@ public class TranslatorFragment extends Fragment {
                     elem.setTextColor(getResources().getColor(R.color.colorTextGray));
                     elem.setText(countTr + "  ");
 
-                    horisontalContainer = new LinearLayoutCompat(getContext());
+                    /*horisontalContainer = new LinearLayoutCompat(getContext());
                     horisontalContainer.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     horisontalContainer.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                    horisontalContainer.addView(elem);*/
+
+                    horisontalContainer = new FlexboxLayout(getContext());
+                    horisontalContainer.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+                    horisontalContainer.setFlexWrap(FlexboxLayout.FLEX_WRAP_WRAP);
+                    horisontalContainer.setAlignItems(FlexboxLayout.ALIGN_ITEMS_FLEX_END);
+                    horisontalContainer.setAlignContent(FlexboxLayout.ALIGN_CONTENT_FLEX_START);
                     horisontalContainer.addView(elem);
+
 
                     elem = new AppCompatTextView(getContext());
                     elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
@@ -443,20 +455,29 @@ public class TranslatorFragment extends Fragment {
                     elem.setTypeface(Typeface.DEFAULT_BOLD);
                     elem.setTextColor(getResources().getColor(R.color.colorDark));
                     elem.setText(entry.getValue() + " ");
+                    //((ViewGroup)elem.getParent()).removeView(elem);
 
                     System.out.println("I'm here");
 
-                    horisontalContainer = new LinearLayoutCompat(getContext());
+                    /*horisontalContainer = new LinearLayoutCompat(getContext());
                     horisontalContainer.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                    horisontalContainer.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                    horisontalContainer.setOrientation(LinearLayoutCompat.HORIZONTAL);*/
+                    horisontalContainer = new FlexboxLayout(getContext());
+                    horisontalContainer.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+                    horisontalContainer.setFlexWrap(FlexboxLayout.FLEX_WRAP_WRAP);
+                    horisontalContainer.setAlignItems(FlexboxLayout.ALIGN_ITEMS_FLEX_END);
+                    horisontalContainer.setAlignContent(FlexboxLayout.ALIGN_CONTENT_FLEX_START);
+                    horisontalContainer.addView(elem);
+
                     if (countTr != 0) {
                         countTr = 0;
                         //float scale = getResources().getDisplayMetrics().density;
                         //int dpAsPixels = (int) (32 * scale + 0.5f);
                         //horisontalContainer.setPadding(0, dpAsPixels, 0, 0);
                     }
-                    horisontalContainer.addView(elem);
+                    //horisontalContainer.addView(elem);
 
                     if (!gen.isEmpty()) {
                         elem = new AppCompatTextView(getContext());
