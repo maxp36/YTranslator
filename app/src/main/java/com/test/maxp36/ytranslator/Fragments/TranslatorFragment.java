@@ -1,15 +1,12 @@
 package com.test.maxp36.ytranslator.Fragments;
 
 
-import android.app.ActionBar;
 import android.content.res.XmlResourceParser;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatSpinner;
@@ -17,10 +14,10 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
@@ -35,10 +32,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TranslatorFragment extends Fragment {
@@ -51,7 +46,9 @@ public class TranslatorFragment extends Fragment {
     private String keyToLanguage;
 
     private Map<String, String> mapLanguages;
-    private Map<Key, String> dictionaryArticle = new LinkedHashMap<>();
+    private LinkedHashMap<Key, String> dictionaryArticle;
+    //private ConcurrentHashMap<Key, String> dictionaryArticle = new ConcurrentHashMap<>();
+    //private Map<Key, String> dictionaryArticle = Collections.synchronizedMap(new LinkedHashMap<Key, String>());
 
 
     private AppCompatEditText editText;
@@ -69,12 +66,12 @@ public class TranslatorFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initLanguagesHashMapResource();
         initAppBar();
         initEditTextView();
         initResultTextView();
-
 
         dictionaryArticleView = (LinearLayoutCompat)getActivity().findViewById(R.id.dictionaryArticle);
 
@@ -83,16 +80,19 @@ public class TranslatorFragment extends Fragment {
 
     private void initAppBar() {
         initSpinners();
+
         AppCompatImageButton changeLanguages = (AppCompatImageButton)getActivity().findViewById(R.id.button_change_languages);
         changeLanguages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                keyFromLanguage = toLanguage.getSelectedItem().toString();
+                keyToLanguage = fromLanguage.getSelectedItem().toString();
                 int tempId = fromLanguage.getSelectedItemPosition();
                 fromLanguage.setSelection(toLanguage.getSelectedItemPosition());
                 toLanguage.setSelection(tempId);
                 if (!editText.getText().toString().equals("")) {
                     editText.setText(resultText.getText());
-                    translate();
+                    //translate();
                 }
             }
         });
@@ -148,6 +148,9 @@ public class TranslatorFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!editText.getText().toString().equals("")) {
                     translate();
+                } else {
+                    resultText.setText("");
+                    dictionaryArticleView.removeAllViews();
                 }
             }
 
@@ -198,8 +201,8 @@ public class TranslatorFragment extends Fragment {
 
     private void translate() {
 
-        new AsyncParsingTranslate().execute(editText.getText().toString());
         new AsyncParsingDictionary().execute(editText.getText().toString());
+        new AsyncParsingTranslate().execute(editText.getText().toString());
 
     }
 
@@ -215,6 +218,7 @@ public class TranslatorFragment extends Fragment {
             boolean isEx = false;
 
             boolean isNotEmpty = false;
+            dictionaryArticle = new LinkedHashMap<>();
 
             try {
                 String url_s = urlDictionary + "?key=" + API_KEY_DICTIONARY + "&text=" +
@@ -244,6 +248,7 @@ public class TranslatorFragment extends Fragment {
 
                     switch (event) {
                         case XmlPullParser.START_TAG:
+                            System.out.println("START_TAG");
                             if (name.equals("mean")) {
                                 isMean = true;
                             } else if (name.equals("ex")) {
@@ -269,18 +274,18 @@ public class TranslatorFragment extends Fragment {
 
                         case XmlPullParser.TEXT:
                             if (!isEx) {
-                                if (isMean) {
-                                    dictionaryArticle.put(new Key("mean"), myParser.getText());
-                                    isMean = false;
+                                if (isDef) {
+                                    dictionaryArticle.put(new Key("def"), myParser.getText());
+                                    isDef = false;
                                 } else if (isTr) {
                                     dictionaryArticle.put(new Key("tr"), myParser.getText());
                                     isTr = false;
                                 } else if (isSyn) {
                                     dictionaryArticle.put(new Key("syn"), myParser.getText());
                                     isSyn = false;
-                                } else if (isDef) {
-                                    dictionaryArticle.put(new Key("def"), myParser.getText());
-                                    isDef = false;
+                                } else if (isMean) {
+                                    dictionaryArticle.put(new Key("mean"), myParser.getText());
+                                    isMean = false;
                                 }
                             }
                             break;
@@ -295,6 +300,7 @@ public class TranslatorFragment extends Fragment {
                 }
 
                 stream.close();
+                connection.disconnect();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -310,44 +316,59 @@ public class TranslatorFragment extends Fragment {
             super.onPostExecute(aBoolean);
             Toast toast = Toast.makeText(getContext(), "boolen = " + aBoolean.toString(), Toast.LENGTH_SHORT);
             toast.show();
+            System.out.println("size " + dictionaryArticle.size());
             if (aBoolean) {
-                fillDictionaryViewFromMap();
+                LinkedHashMap<Key, String> dictionaryArticleTemp = dictionaryArticle;
+                fillDictionaryViewFromMap(dictionaryArticleTemp);
 
-                System.out.println("size " + dictionaryArticle.size());
-                for (Map.Entry<Key, String> entry : dictionaryArticle.entrySet()) {
+                System.out.println("size " + dictionaryArticleTemp.size());
+                for (Map.Entry<Key, String> entry : dictionaryArticleTemp.entrySet()) {
                     System.out.println(entry.getKey().getKey() + " = " + entry.getValue());
                 }
 
-                dictionaryArticle.clear();
+                //dictionaryArticle.clear();
 
+            } else {
+                dictionaryArticleView.removeAllViews();
             }
         }
 
-        private void fillDictionaryViewFromMap() {
+        private void fillDictionaryViewFromMap(LinkedHashMap<Key, String> dictionaryArticleTemp) {
 
             dictionaryArticleView.removeAllViews();
 
             //LinearLayoutCompat horisontalContainer = new LinearLayoutCompat(getContext());
             FlexboxLayout horisontalContainer = new FlexboxLayout(getContext());
-            AppCompatTextView elem;
+            //GridLayout gridContainer = new GridLayout(getContext());
+            AppCompatTextView elem = new AppCompatTextView(getContext());
 
             String gen = "";
             String pos = "";
             String ts = "";
             String num = "";
 
+            String sTr = "";
+            String sGen = "";
+            String sSyn = "";
+
+
             int countTr = 0;
+            //boolean isGridLayout = false;
+            boolean isTr = false;
+            boolean isSyn = false;
+            boolean isGen = false;
+            //boolean isDef = false;
             //boolean isMean = false;
 
-            for (Map.Entry<Key, String> entry : dictionaryArticle.entrySet()) {
+            for (final Map.Entry<Key, String> entry : dictionaryArticleTemp.entrySet()) {
 
-                if (!entry.getKey().getKey().equals("syn")
+                /*if (!entry.getKey().getKey().equals("syn")
                         && !entry.getKey().getKey().equals("gen")
                         && !entry.getKey().getKey().equals("pos")
                         && !entry.getKey().getKey().equals("num")) {
                     //horisontalContainer = new LinearLayoutCompat(getContext());
                     horisontalContainer = new FlexboxLayout(getContext());
-                }
+                }*/
 
                 /*if (entry.getKey().getKey().equals("mean")) {
 
@@ -372,15 +393,37 @@ public class TranslatorFragment extends Fragment {
                 //}
                 if (entry.getKey().getKey().equals("tr")) {
 
+                    isTr = true;
+                    sTr = entry.getValue();
                     //isMean = false;
                     countTr++;
+                    //isDef = false;
+
+                    //if (!isGridLayout) {
+                    //    isGridLayout = true;
+                    //    gridContainer = new GridLayout(getContext());
+                    //    gridContainer.setOrientation(GridLayout.HORIZONTAL);
+                    //    gridContainer.setColumnCount(2);
+                    //}
+
+                    //if (isTr || isSyn) {
+                    //    isSyn = false;
+                    //    gridContainer.addView(horisontalContainer);
+                    //}
+                    //isTr = true;
 
                     elem = new AppCompatTextView(getContext());
                     elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     elem.setTextSize(16);
                     elem.setTextColor(getResources().getColor(R.color.colorTextGray));
-                    elem.setText(countTr + "  ");
+                    if (!keyFromLanguage.equals(keyToLanguage)) {
+                        elem.setText(countTr + "  ");
+                    } else {
+                        elem.setText("    ");
+                    }
+
+                    //gridContainer.addView(elem);
 
                     /*horisontalContainer = new LinearLayoutCompat(getContext());
                     horisontalContainer.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
@@ -396,17 +439,30 @@ public class TranslatorFragment extends Fragment {
                     horisontalContainer.setAlignContent(FlexboxLayout.ALIGN_CONTENT_FLEX_START);
                     horisontalContainer.addView(elem);
 
-
                     elem = new AppCompatTextView(getContext());
                     elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     elem.setTextSize(16);
                     elem.setTextColor(getResources().getColor(R.color.colorTextBlue));
+                    elem.setClickable(true);
+                    elem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            keyFromLanguage = toLanguage.getSelectedItem().toString();
+                            keyToLanguage = fromLanguage.getSelectedItem().toString();
+                            int tempId = fromLanguage.getSelectedItemPosition();
+                            fromLanguage.setSelection(toLanguage.getSelectedItemPosition());
+                            toLanguage.setSelection(tempId);
+                            editText.setText(entry.getValue());
+                        }
+                    });
                     elem.setText(entry.getValue());
 
                     horisontalContainer.addView(elem);
 
                     if (!gen.isEmpty()) {
+                        isTr = false;
+                        isGen = true;
                         elem = new AppCompatTextView(getContext());
                         elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -421,17 +477,45 @@ public class TranslatorFragment extends Fragment {
                 } else if (entry.getKey().getKey().equals("syn")) {
 
                     //isMean = false;
+                    //isTr = false;
+                    //isSyn = true;
+
+                    if (isGen) {
+                        elem.setText(" " + sGen + ", ");
+                        isGen = false;
+                    } else if (isSyn) {
+                        elem.setText(sSyn + ", ");
+                        isSyn = false;
+                    } else if (isTr) {
+                        elem.setText(sTr + ", ");
+                        isTr = false;
+                    }
+                    isSyn = true;
+                    sSyn = entry.getValue();
 
                     elem = new AppCompatTextView(getContext());
                     elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     elem.setTextSize(16);
                     elem.setTextColor(getResources().getColor(R.color.colorTextBlue));
-                    elem.setText(", " + entry.getValue());
+                    elem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            keyFromLanguage = toLanguage.getSelectedItem().toString();
+                            keyToLanguage = fromLanguage.getSelectedItem().toString();
+                            int tempId = fromLanguage.getSelectedItemPosition();
+                            fromLanguage.setSelection(toLanguage.getSelectedItemPosition());
+                            toLanguage.setSelection(tempId);
+                            editText.setText(entry.getValue());
+                        }
+                    });
+                    elem.setText(entry.getValue());
 
                     horisontalContainer.addView(elem);
 
                     if (!gen.isEmpty()) {
+                        isSyn = false;
+                        isGen = true;
                         elem = new AppCompatTextView(getContext());
                         elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -446,8 +530,18 @@ public class TranslatorFragment extends Fragment {
                 } else if (entry.getKey().getKey().equals("def")) {
 
                     //isMean = false;
+                    //isDef = true;
 
+                    //if (isTr || isSyn) {
+                    //    isTr = false;
+                    //    isSyn = false;
+                    //    gridContainer.addView(horisontalContainer);
+                    //    dictionaryArticleView.addView(gridContainer);
+                    //}
+
+                    //isGridLayout = false;
                     countTr = 0;
+
                     elem = new AppCompatTextView(getContext());
                     elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -522,7 +616,11 @@ public class TranslatorFragment extends Fragment {
                         horisontalContainer.addView(elem);
                         num = "";
                     }
+
+                    //dictionaryArticleView.addView(horisontalContainer);
+
                 } else if (entry.getKey().getKey().equals("gen")) {
+                    sGen = gen;
                     gen = entry.getValue();
                 } else if (entry.getKey().getKey().equals("pos")) {
                     pos = entry.getValue();
@@ -537,11 +635,18 @@ public class TranslatorFragment extends Fragment {
                 //Toast toast1 = Toast.makeText(getContext(), "Size " + horisontalContainer.getChildCount(), Toast.LENGTH_SHORT);
                 //toast1.show();
 
-                if (horisontalContainer.getChildCount() != 0
+                /*if (horisontalContainer.getChildCount() != 0
                         && !entry.getKey().getKey().equals("syn")
                         && !entry.getKey().getKey().equals("gen")
                         && !entry.getKey().getKey().equals("pos")
                         && !entry.getKey().getKey().equals("num")) {
+                    System.out.println("dictionaryArticleView.addView(horisontalContainer); ");
+                    dictionaryArticleView.addView(horisontalContainer);
+                }*/
+
+                if (horisontalContainer.getChildCount() != 0
+                        && (entry.getKey().getKey().equals("def")
+                        || entry.getKey().getKey().equals("tr"))) {
                     System.out.println("dictionaryArticleView.addView(horisontalContainer); ");
                     dictionaryArticleView.addView(horisontalContainer);
                 }
@@ -557,64 +662,6 @@ public class TranslatorFragment extends Fragment {
         protected String doInBackground(String... params) {
 
             String s = null;
-            //Pattern p = Pattern.compile("^\\s+[а-яА-ЯёЁa-zA-Z-]\\s+$");
-           // boolean isOneWord = params[0].split(" +").length == 1;
-
-            /*try{
-                connectToUrl(urlDictionary, API_KEY_DICTIONARY, URLEncoder.encode(params[0], "UTF-8"));
-                stream = connection.getInputStream();
-                xmlFactoryObject = XmlPullParserFactory.newInstance();
-                myParser = xmlFactoryObject.newPullParser();
-                myParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                myParser.setInput(stream, null);
-
-
-                if (myParser.getLineNumber() > 3) { // т.е. словарь выдает информацию по заданному тексту
-                    //парсинг словаря
-
-
-                } else { // не выдает, переводим переводчиком
-                    stream.close();
-                    connection.disconnect();
-                    connectToUrl(urlTranslate, API_KEY_TRANSLATE, URLEncoder.encode(params[0], "UTF-8"));
-                    stream = connection.getInputStream();
-                    xmlFactoryObject = XmlPullParserFactory.newInstance();
-                    myParser = xmlFactoryObject.newPullParser();
-                    myParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                    myParser.setInput(stream, null);
-
-                    //парсинг переводчика
-                    int event = myParser.getEventType();
-                    String text = null;
-                    while (event != XmlPullParser.END_DOCUMENT) {
-                        String name = myParser.getName();
-
-                        switch (event) {
-                            case XmlPullParser.START_TAG:
-                                break;
-                            case XmlPullParser.TEXT:
-                                text = myParser.getText();
-                                break;
-
-                            case XmlPullParser.END_TAG:
-                                //get text
-                                if (name.equals("text")) {
-                                    s = text;
-                                }
-                                break;
-                        }
-                        event = myParser.next();
-                    }
-
-                    stream.close();
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                s = e.getMessage();
-                return s;
-            }*/
 
             try {
                 String url_s = urlTranslate + "?key=" + API_KEY_TRANSLATE + "&text=" +
@@ -656,10 +703,11 @@ public class TranslatorFragment extends Fragment {
                             break;
                     }
                     event = myParser.next();
+                    connection.disconnect();
+
                 }
 
                 stream.close();
-
             } catch (Exception e) {
                 e.printStackTrace();
                 s = e.getMessage();
