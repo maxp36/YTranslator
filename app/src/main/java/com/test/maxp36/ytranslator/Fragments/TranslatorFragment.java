@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.test.maxp36.ytranslator.Key;
+import com.test.maxp36.ytranslator.MainActivity;
 import com.test.maxp36.ytranslator.R;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -57,6 +58,12 @@ public class TranslatorFragment extends Fragment {
     private AppCompatSpinner toLanguage;
     private LinearLayoutCompat dictionaryArticleView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,11 +79,28 @@ public class TranslatorFragment extends Fragment {
         initAppBar();
         initEditTextView();
         initResultTextView();
-
         dictionaryArticleView = (LinearLayoutCompat)getActivity().findViewById(R.id.dictionaryArticle);
+
+        /*try {
+            fromLanguage.setSelection(savedInstanceState.getInt("fromLanguageItemId"));
+            toLanguage.setSelection(savedInstanceState.getInt("toLanguageItemId"));
+            keyFromLanguage = toLanguage.getSelectedItem().toString();
+            keyToLanguage = fromLanguage.getSelectedItem().toString();
+            editText.setText(savedInstanceState.getString("textForTranslate"));
+            System.out.println("savedInstanceState: " + savedInstanceState.getInt("fromLanguageItemId") + savedInstanceState.getInt("toLanguageItemId") + savedInstanceState.getString("textForTranslate"));
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }*/
 
     }
 
+    /*@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("fromLanguageItemId", fromLanguage.getSelectedItemPosition());
+        outState.putInt("toLanguageItemId", toLanguage.getSelectedItemPosition());
+        outState.putString("textForTranslate", editText.getText().toString());
+    }*/
 
     private void initAppBar() {
         initSpinners();
@@ -314,8 +338,8 @@ public class TranslatorFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            Toast toast = Toast.makeText(getContext(), "boolen = " + aBoolean.toString(), Toast.LENGTH_SHORT);
-            toast.show();
+            //Toast toast = Toast.makeText(getContext(), "boolen = " + aBoolean.toString(), Toast.LENGTH_SHORT);
+            //toast.show();
             System.out.println("size " + dictionaryArticle.size());
             if (aBoolean) {
                 LinkedHashMap<Key, String> dictionaryArticleTemp = dictionaryArticle;

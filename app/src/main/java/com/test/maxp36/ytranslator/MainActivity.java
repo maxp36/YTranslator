@@ -16,7 +16,13 @@ import com.test.maxp36.ytranslator.Fragments.TranslatorFragment;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationBar bottomNavigationBar;
-    private Fragment contentFragment;
+    //private Fragment contentFragment;
+    private Fragment translatorFragment = null;
+    private Fragment marksFragment = null;
+    private Fragment settingsFragment = null;
+    private static final String TRANSLATOR_FRAGMENT = "translatorFragment";
+    private static final String MARKS_FRAGMENT = "marksFragment";
+    private static final String SETTINGS_FRAGMENT = "settingsFragment";
     private int id_tab;
 
 
@@ -32,10 +38,23 @@ public class MainActivity extends AppCompatActivity {
             id_tab = 0;
         }
 
-        if(contentFragment != null) {
+        translatorFragment = (TranslatorFragment)getSupportFragmentManager().findFragmentByTag(TRANSLATOR_FRAGMENT);
+        if (translatorFragment == null) {
+            translatorFragment = new TranslatorFragment();
+        }
+        marksFragment = (MarksFragment)getSupportFragmentManager().findFragmentByTag(MARKS_FRAGMENT);
+        if (marksFragment == null) {
+            marksFragment = new MarksFragment();
+        }
+        settingsFragment = (SettingsFragment)getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT);
+        if (settingsFragment == null) {
+            settingsFragment = new SettingsFragment();
+        }
+
+        /*if(contentFragment != null) {
             Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
             toast.show();
-        }
+        }*/
 
         initBottomNavigationBar();
     }
@@ -61,38 +80,47 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(int position) {
 
-                if (contentFragment != null) {
+                /*if (contentFragment != null) {
                     getSupportFragmentManager().beginTransaction()
                             .remove(contentFragment)
                             .commit();
-                }
+                }*/
 
                 switch (position) {
                     case 0 : {
-                        contentFragment = new TranslatorFragment();
+                        /*contentFragment = new TranslatorFragment();
                         Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        toast.show();*/
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.content, translatorFragment, TRANSLATOR_FRAGMENT)
+                                .commit();
                         id_tab = 0;
                         break;
                     }
                     case 1 : {
-                        contentFragment = new MarksFragment();
+                        /*contentFragment = new MarksFragment();
                         Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        toast.show();*/
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.content, marksFragment, MARKS_FRAGMENT)
+                                .commit();
                         id_tab = 1;
                         break;
                     }
                     case 2 : {
-                        contentFragment = new SettingsFragment();
+                        /*contentFragment = new SettingsFragment();
                         Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        toast.show();*/
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.content, settingsFragment, SETTINGS_FRAGMENT)
+                                .commit();
                         id_tab = 2;
                         break;
                     }
                 }
-                getSupportFragmentManager().beginTransaction()
+                /*getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content, contentFragment)
-                        .commit();
+                        .commit();*/
             }
 
             @Override
