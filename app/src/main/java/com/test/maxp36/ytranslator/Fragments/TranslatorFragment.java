@@ -495,7 +495,7 @@ public class TranslatorFragment extends Fragment {
                         elem.setText(" " + gen);
 
                         horisontalContainer.addView(elem);
-                        gen = "";
+                        //gen = "";
                     }
 
                 } else if (entry.getKey().getKey().equals("syn")) {
@@ -548,10 +548,15 @@ public class TranslatorFragment extends Fragment {
                         elem.setText(" " + gen);
 
                         horisontalContainer.addView(elem);
-                        gen = "";
+                        //gen = "";
                     }
 
                 } else if (entry.getKey().getKey().equals("def")) {
+
+                    isTr = false;
+                    isSyn = false;
+                    isGen = false;
+                    gen = "";
 
                     //isMean = false;
                     //isDef = true;
@@ -597,7 +602,7 @@ public class TranslatorFragment extends Fragment {
                     }
                     //horisontalContainer.addView(elem);
 
-                    if (!gen.isEmpty()) {
+                    /*if (!gen.isEmpty()) {
                         elem = new AppCompatTextView(getContext());
                         elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
                                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -607,7 +612,7 @@ public class TranslatorFragment extends Fragment {
 
                         horisontalContainer.addView(elem);
                         gen = "";
-                    }
+                    }*/ // чуть-чуть некорректно отображается
                     if (!pos.isEmpty()) {
                         elem = new AppCompatTextView(getContext());
                         elem.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
