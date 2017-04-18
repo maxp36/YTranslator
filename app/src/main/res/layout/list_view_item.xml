@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:minHeight="@dimen/height_item">
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/button_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height_item"
+        android:layout_margin="@dimen/ic_margin"
+        android:src="@mipmap/ic_mark_dark"
+        android:paddingLeft="@dimen/between_content"
+        android:paddingRight="@dimen/between_content"
+        android:background="?android:selectableItemBackground"
+        android:layout_weight="0"
+        />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="@dimen/height_item"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/original_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/translated_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/languages_item_text_view"
+        android:layout_width="@dimen/width_languages_text_view"
+        android:layout_height="@dimen/height_item"
+        android:layout_weight="0"
+        android:gravity="center"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

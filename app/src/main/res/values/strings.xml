@@ -1,8 +1,23 @@
 <resources>
     <string name="app_name">YTranslator</string>
-    <string name="text_translator">Translator</string>
-    <string name="text_mark">Marks</string>
-    <string name="text_settings">Settings</string>
+    <string name="text_translator">Переводчик</string>
+    <string name="text_mark">История</string>
+    <string name="text_settings">Настройки</string>
+
+
+    <string name="settings_language_summary">Выберите язык</string>
+    <string name="settings_language_title">Язык</string>
+    <string name="settings_language_default_value">ru</string>
+
+    <array name="settings_language_entries">
+        <item>Русский</item>
+        <item>Английский</item>
+    </array>
+
+    <array name="settings_language_entries_values">
+        <item>ru</item>
+        <item>en</item>
+    </array>
     
     <array name="list_languages">
         <item>Русский</item>

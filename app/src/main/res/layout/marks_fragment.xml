@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatTextView
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarTranslate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/text_mark"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" >
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="?attr/actionBarSize" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/button_remove_items"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/ic_margin"
+            android:src="@mipmap/ic_delete"
+            android:background="?android:selectableItemBackground"
+            android:layout_alignRight="@id/tab_layout"
+            />
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appbarTranslate"/>
+
+</RelativeLayout>

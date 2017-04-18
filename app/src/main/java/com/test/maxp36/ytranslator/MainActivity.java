@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.test.maxp36.ytranslator.Fragments.AboutFragment;
 import com.test.maxp36.ytranslator.Fragments.MarksFragment;
-import com.test.maxp36.ytranslator.Fragments.SettingsFragment;
 import com.test.maxp36.ytranslator.Fragments.TranslatorFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,12 +19,13 @@ public class MainActivity extends AppCompatActivity {
     //private Fragment contentFragment;
     private Fragment translatorFragment = null;
     private Fragment marksFragment = null;
-    private Fragment settingsFragment = null;
+    private Fragment aboutFragment = null;
+    //private PreferenceFragmentCompat settingsFragment = null;
     private static final String TRANSLATOR_FRAGMENT = "translatorFragment";
     private static final String MARKS_FRAGMENT = "marksFragment";
-    private static final String SETTINGS_FRAGMENT = "settingsFragment";
+    private static final String ABOUT_FRAGMENT = "aboutFragment";
+    //private static final String SETTINGS_FRAGMENT = "settingsFragment";
     private int id_tab;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,18 +39,22 @@ public class MainActivity extends AppCompatActivity {
             id_tab = 0;
         }
 
-        translatorFragment = (TranslatorFragment)getSupportFragmentManager().findFragmentByTag(TRANSLATOR_FRAGMENT);
+        translatorFragment = getSupportFragmentManager().findFragmentByTag(TRANSLATOR_FRAGMENT);
         if (translatorFragment == null) {
             translatorFragment = new TranslatorFragment();
         }
-        marksFragment = (MarksFragment)getSupportFragmentManager().findFragmentByTag(MARKS_FRAGMENT);
+        marksFragment = getSupportFragmentManager().findFragmentByTag(MARKS_FRAGMENT);
         if (marksFragment == null) {
             marksFragment = new MarksFragment();
         }
-        settingsFragment = (SettingsFragment)getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT);
+        aboutFragment = getSupportFragmentManager().findFragmentByTag(ABOUT_FRAGMENT);
+        if (aboutFragment == null) {
+            aboutFragment = new AboutFragment();
+        }
+        /*settingsFragment = (PreferenceFragmentCompat)getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT);
         if (settingsFragment == null) {
             settingsFragment = new SettingsFragment();
-        }
+        }*/
 
         /*if(contentFragment != null) {
             Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
@@ -112,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(getApplicationContext(), contentFragment.toString(), Toast.LENGTH_SHORT);
                         toast.show();*/
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.content, settingsFragment, SETTINGS_FRAGMENT)
+                                .replace(R.id.content, aboutFragment, ABOUT_FRAGMENT)
                                 .commit();
                         id_tab = 2;
                         break;

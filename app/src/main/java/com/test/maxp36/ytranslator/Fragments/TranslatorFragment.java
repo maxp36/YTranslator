@@ -1,7 +1,13 @@
 package com.test.maxp36.ytranslator.Fragments;
 
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,17 +19,23 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.test.maxp36.ytranslator.Key;
 import com.test.maxp36.ytranslator.MainActivity;
+import com.test.maxp36.ytranslator.MySQLiteOpenHelper;
 import com.test.maxp36.ytranslator.R;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -33,6 +45,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,6 +64,8 @@ public class TranslatorFragment extends Fragment {
     //private ConcurrentHashMap<Key, String> dictionaryArticle = new ConcurrentHashMap<>();
     //private Map<Key, String> dictionaryArticle = Collections.synchronizedMap(new LinkedHashMap<Key, String>());
 
+    //private Date time;
+    //private long translateTime;
 
     private AppCompatEditText editText;
     private AppCompatTextView resultText;
@@ -159,6 +174,49 @@ public class TranslatorFragment extends Fragment {
     private void initEditTextView() {
 
         editText = (AppCompatEditText)getActivity().findViewById(R.id.translator_edit_text);
+        editText.setImeOptions(EditorInfo.IME_ACTION_GO);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        //editText.setImeOptions(EditorInfo.IME_ACTION_GO);
+        //editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        /*editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                System.out.println("++++++++++++++" + event);
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    Toast toast = Toast.makeText(getContext(), "Enter()", Toast.LENGTH_SHORT);
+                    toast.show();
+                    //editText.clearFocus();
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });*/
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                System.out.println("++++++++++++++" + event + " " + actionId);
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    Toast toast = Toast.makeText(getContext(), "Enter()", Toast.LENGTH_SHORT);
+                    toast.show();
+                    //editText.clearFocus();
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getApplicationWindowToken(), 0);
+                    if (!editText.getText().toString().isEmpty() && !resultText.getText().toString().isEmpty()) {
+                        new AsyncAddItem().execute(editText.getText().toString(),
+                                resultText.getText().toString(),
+                                convertLanguageToKey(keyFromLanguage).toUpperCase(),
+                                convertLanguageToKey(keyToLanguage).toUpperCase(),
+                                "0");
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
         AppCompatImageButton clearEditText = (AppCompatImageButton)getActivity().findViewById(R.id.clear_edit_text_button);
         AppCompatImageButton mikeEditText = (AppCompatImageButton)getActivity().findViewById(R.id.mike_edit_text_button);
         AppCompatImageButton voiceEditText = (AppCompatImageButton)getActivity().findViewById(R.id.voice_edit_text_button);
@@ -170,7 +228,9 @@ public class TranslatorFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!editText.getText().toString().equals("")) {
+                if (!s.toString().isEmpty() && s.toString().length() != 1) {
+                    //if (time.getTime() - translateTime >= 3000) {
+                    //}
                     translate();
                 } else {
                     resultText.setText("");
@@ -196,6 +256,29 @@ public class TranslatorFragment extends Fragment {
 
     private void initResultTextView() {
         resultText = (AppCompatTextView)getActivity().findViewById(R.id.result_text_view);
+
+        AppCompatImageButton btnMark = (AppCompatImageButton)getActivity().findViewById(R.id.mark_result_text_button);
+        btnMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!editText.getText().toString().isEmpty() && !resultText.getText().toString().isEmpty()) {
+                    new AsyncAddItem().execute(editText.getText().toString(),
+                            resultText.getText().toString(),
+                            convertLanguageToKey(keyFromLanguage).toUpperCase(),
+                            convertLanguageToKey(keyToLanguage).toUpperCase(),
+                            "1");
+                }
+            }
+        });
+        /*btnMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AsyncAddItem().execute(editText.getText().toString(),
+                        resultText.getText().toString(),
+                        keyFromLanguage,
+                        keyToLanguage);
+            }
+        });*/
     }
 
     private void initLanguagesHashMapResource() {
@@ -801,6 +884,7 @@ public class TranslatorFragment extends Fragment {
 
 
             resultText.setText(s);
+            //translateTime = time.getTime();
         }
 
         /*private void connectToUrl(String urlType, String api_key, String text) {
@@ -818,5 +902,71 @@ public class TranslatorFragment extends Fragment {
                 e.printStackTrace();
             }
         }*/
+    }
+
+    private class AsyncAddItem extends AsyncTask<String, Void, Void> {
+
+        private SQLiteOpenHelper mySQLiteOpenHelper;
+        private SQLiteDatabase db;
+        private SQLiteDatabase tempDB;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            try {
+                mySQLiteOpenHelper = new MySQLiteOpenHelper(getContext());
+                tempDB = mySQLiteOpenHelper.getReadableDatabase();
+                db = mySQLiteOpenHelper.getWritableDatabase();
+            } catch (SQLiteException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            try {
+                Cursor c = tempDB.query("HISTORY",
+                                        null,
+                                        "ORIGINAL_TEXT = ? AND TRANSLATED_TEXT = ?",
+                                        new String[]{params[0], params[1]},
+                                        null,
+                                        null,
+                                        null);
+                System.out.println("c.getCount()" + c.getCount());
+                if (c.getCount() == 0) {
+                    ContentValues cv = new ContentValues();
+                    cv.put("ORIGINAL_TEXT", params[0]);
+                    cv.put("TRANSLATED_TEXT", params[1]);
+                    cv.put("FROM_LANGUAGE_KEY", params[2]);
+                    cv.put("TO_LANGUAGE_KEY", params[3]);
+                    cv.put("IS_FAVORITES", Integer.parseInt(params[4]));
+                    db.insert("HISTORY", null, cv);
+                    db.close();
+                }
+                if (c.getCount() > 0) {
+                    c.moveToFirst();
+                    int favorites = c.getInt(c.getColumnIndex("IS_FAVORITES"));
+                    if (favorites == 0 && Integer.parseInt(params[4]) == 1) {
+                        ContentValues cv = new ContentValues();
+                        cv.put("ORIGINAL_TEXT", params[0]);
+                        cv.put("TRANSLATED_TEXT", params[1]);
+                        cv.put("FROM_LANGUAGE_KEY", params[2]);
+                        cv.put("TO_LANGUAGE_KEY", params[3]);
+                        cv.put("IS_FAVORITES", 1);
+                        db.update("HISTORY", cv, "ORIGINAL_TEXT = ? AND TRANSLATED_TEXT = ?", new String[]{params[0], params[1]});
+                        db.close();
+                    }
+                }
+                tempDB.close();
+                c.close();
+
+            } catch (SQLiteException ex) {
+                ex.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

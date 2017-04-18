@@ -23,6 +23,8 @@
     <color name="colorLightGreenA400">#76ff03</color>
     <color name="colorLightGreenA700">#64dd17</color>
 
+    <color name="colorGray">#888888</color>
+
     <color name="colorBorder">@color/colorAccent</color>
 
     <color name="colorTextGray">#888888</color>
