@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/favorites_search_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите запрос"/>
+
     <android.support.v7.widget.ListViewCompat
         android:id="@+id/favorites_list_view"
         android:layout_width="match_parent"

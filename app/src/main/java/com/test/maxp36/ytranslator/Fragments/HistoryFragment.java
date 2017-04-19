@@ -12,11 +12,15 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.ListViewCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FilterQueryProvider;
 import android.widget.Toast;
 
 import com.test.maxp36.ytranslator.MyCursorAdapter;
@@ -29,9 +33,11 @@ import java.util.List;
 public class HistoryFragment extends Fragment implements MyCursorAdapter.UpgradeList {
 
     private ListViewCompat listView;
+    private AppCompatEditText searchEditText;
 
     private SQLiteDatabase db;
     private Cursor cursor;
+    private Cursor searchCursor;
     private CursorAdapter cursorAdapter;
 
     private static List<String> ids;
@@ -49,6 +55,22 @@ public class HistoryFragment extends Fragment implements MyCursorAdapter.Upgrade
         toast.show();
 
         ids = new ArrayList<>();
+
+        searchEditText = (AppCompatEditText)getActivity().findViewById(R.id.history_search_edit_text);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                cursorAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         listView = (ListViewCompat)getActivity().findViewById(R.id.history_list_view);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,6 +167,18 @@ public class HistoryFragment extends Fragment implements MyCursorAdapter.Upgrade
                         "_id DESC");
 
                 cursorAdapter = new MyCursorAdapter(getContext(), cursor, 0, HistoryFragment.this);
+                cursorAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+                    @Override
+                    public Cursor runQuery(CharSequence constraint) {
+                        AsyncLoadSearchData alsd = new AsyncLoadSearchData();
+                        alsd.execute(constraint.toString());
+                        while (true) {
+                            if (alsd.getStatus() == AsyncTask.Status.FINISHED) {
+                                return searchCursor;
+                            }
+                        }
+                    }
+                });
             } catch (SQLiteException ex) {
                 ex.printStackTrace();
             }
@@ -158,6 +192,45 @@ public class HistoryFragment extends Fragment implements MyCursorAdapter.Upgrade
             Parcelable state = listView.onSaveInstanceState();
             listView.setAdapter(cursorAdapter);
             listView.onRestoreInstanceState(state);
+        }
+    }
+
+    private class AsyncLoadSearchData extends AsyncTask<String, Void, Cursor> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            try {
+                SQLiteOpenHelper mySQLiteOpenHelper = new MySQLiteOpenHelper(getContext());
+                db = mySQLiteOpenHelper.getReadableDatabase();
+                Toast toast = Toast.makeText(getContext(), "AsyncLoadDatabase", Toast.LENGTH_SHORT);
+                toast.show();
+            } catch (SQLiteException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Cursor doInBackground(String... params) {
+            try {
+                cursor = db.query("HISTORY",
+                        null,
+                        " ORIGINAL_TEXT LIKE '%" + params[0] + "%' OR TRANSLATED_TEXT LIKE '%" + params[0] + "%'",
+                        null,
+                        null,
+                        null,
+                        "_id DESC");
+            } catch (SQLiteException ex) {
+                ex.printStackTrace();
+            }
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            searchCursor = cursor;
         }
     }
 
