@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="ic_margin">8dp</dimen>
-    <dimen name="ic_margin_double">16dp</dimen>
     <dimen name="edit_text_translator_min_height">128dp</dimen>
     <dimen name="between_content">8dp</dimen>
     <dimen name="between_content_double">16dp</dimen>
-    <dimen name="right_padding_for_edit_text_translator">48dp</dimen>
+    <dimen name="right_padding_for_search">48dp</dimen>
     <dimen name="bottom_padding_for_edit_text_translator">48dp</dimen>
 
-    <dimen name="height_bottom_navigation">48dp</dimen>
-
-    <dimen name="bottom_margin_for_content">56dp</dimen>
-    
-    <dimen name="dictionary_text">16sp</dimen>
-    <dimen name="dictionary_arg">14sp</dimen>
+    <dimen name="height_bottom_navigation">56dp</dimen>
     
     <dimen name="height_item">72dp</dimen>
-    <dimen name="width_languages_text_view">72dp</dimen>
     <dimen name="divider_height">1dp</dimen>
 </resources>

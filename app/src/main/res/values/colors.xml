@@ -1,35 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/colorLightGreen500</color>
-    <color name="colorPrimaryDark">@color/colorLightGreen900</color>
-    <color name="colorAccent">@color/colorLightGreenA400</color>
-    <color name="colorBackground">@color/colorWhite</color>
 
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorDark">#000000</color>
+    <color name="colorPrimary">#2e7d32</color>
+    <color name="colorPrimaryDark">#005005</color>
+    <color name="colorPrimaryLight">#60ad5e</color>
 
-    <color name="colorLightGreen50">#f1f8e9</color>
-    <color name="colorLightGreen100">#dcedc8</color>
-    <color name="colorLightGreen200">#c5e1a5</color>
-    <color name="colorLightGreen300">#aed581</color>
-    <color name="colorLightGreen400">#9ccc65</color>
-    <color name="colorLightGreen500">#8bc34a</color>
-    <color name="colorLightGreen600">#7cb342</color>
-    <color name="colorLightGreen700">#689f38</color>
-    <color name="colorLightGreen800">#558b2f</color>
-    <color name="colorLightGreen900">#33691e</color>
-    <color name="colorLightGreenA100">#ccff90</color>
-    <color name="colorLightGreenA200">#b2ff59</color>
-    <color name="colorLightGreenA400">#76ff03</color>
-    <color name="colorLightGreenA700">#64dd17</color>
+    <color name="colorSecondary">#ffa000</color>
+    <color name="colorSecondaryDark">#c67100</color>
+    <color name="colorSecondaryLight">#ffd149</color>
 
-    <color name="colorGray">#888888</color>
+    <color name="colorAccent">@color/colorSecondary</color>
 
-    <color name="colorBorder">@color/colorAccent</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
 
-    <color name="colorTextGray">#888888</color>
-    <color name="colorTextGreen">@color/colorLightGreen900</color>
-    <color name="colorTextBlue">#4b4b99</color>
+    <color name="colorGrayLight">#F5F5F6</color>
+    <color name="colorGrayDark">#E1E2E1</color>
+    <color name="colorGrayReallyDark">#6d6d6d</color>
 
+    <color name="primary_text_default_material_light">#deffffff</color>
+    <color name="primary_text_material_light">@color/colorWhite</color>
+    <color name="primary_text_material_dark">@color/colorBlack</color>
+    <color name="background_material_light">@color/colorGrayLight</color>
 
 </resources>

@@ -2,60 +2,18 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    android:paddingBottom="@dimen/between_content" >
+    android:scrollbars="none">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbarTranslate"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" >
-
-            <!--<android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary">
-
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/first_language_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?android:selectableItemBackground"
-                        android:entries="@array/list_languages"
-                        style="@style/SpinnerAsEditText"/>
-
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/button_change_languages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/ic_margin"
-                        android:src="@mipmap/ic_swap_horizontal"
-                        android:background="?android:selectableItemBackground"
-                        />
-
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/second_language_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="?android:selectableItemBackground"
-                        android:entries="@array/list_languages"
-                        style="@style/SpinnerAsEditText"/>
-
-                </android.support.v7.widget.LinearLayoutCompat>
-
-            </android.support.v7.widget.Toolbar>-->
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:orientation="horizontal"
@@ -75,10 +33,10 @@
                     android:id="@+id/button_change_languages"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/ic_margin"
+                    android:padding="@dimen/ic_margin"
                     android:src="@mipmap/ic_swap_horizontal"
-                    android:background="?android:selectableItemBackground"
-                    />
+                    android:tint="@color/colorAccent"
+                    android:background="?android:selectableItemBackground" />
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/second_language_spinner"
@@ -101,15 +59,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/edit_text_translator_min_height"
-                android:layout_margin="@dimen/between_content"
                 android:paddingLeft="@dimen/between_content"
-                android:paddingTop="@dimen/between_content"
-                android:paddingRight="@dimen/right_padding_for_edit_text_translator"
+                android:paddingTop="@dimen/between_content_double"
+                android:paddingRight="@dimen/between_content"
                 android:paddingBottom="@dimen/bottom_padding_for_edit_text_translator"
+                android:textColor="@color/colorBlack"
                 android:textSize="16sp"
-                android:background="@drawable/border_edit_text"
-                android:hint="Enter a text"
-                android:gravity="start" />
+                android:background="@color/colorGrayDark"
+                android:hint="@string/hint_translator_edit_text"
+                android:gravity="start"
+
+                android:inputType="textMultiLine" />
 
             <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/clear_edit_text_button"
@@ -118,106 +78,55 @@
                 android:layout_alignBottom="@id/translator_edit_text"
                 android:src="@mipmap/ic_close"
                 android:background="?android:selectableItemBackground"
-                android:layout_marginLeft="@dimen/ic_margin_double"
-                android:layout_marginTop="@dimen/ic_margin"
-                android:layout_marginRight="@dimen/ic_margin"
-                android:layout_marginBottom="@dimen/ic_margin"
-                />
+                android:padding="@dimen/ic_margin"/>
 
-            <android.support.v7.widget.LinearLayoutCompat
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/mark_result_text_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/between_content"
-                android:layout_alignRight="@id/translator_edit_text">
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/mike_edit_text_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_microphone"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_margin="@dimen/ic_margin"
-                    />
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/voice_edit_text_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_play_text"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_marginLeft="@dimen/ic_margin"
-                    android:layout_marginRight="@dimen/ic_margin"
-                    android:layout_marginBottom="@dimen/ic_margin"
-                    />
-
-            </android.support.v7.widget.LinearLayoutCompat>
+                android:layout_alignBottom="@+id/translator_edit_text"
+                android:layout_alignRight="@+id/translator_edit_text"
+                android:src="@mipmap/ic_mark_dark"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/ic_margin"/>
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.LinearLayoutCompat
-                android:id="@+id/button_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/between_content"
-                android:layout_marginRight="@dimen/between_content"
-                android:layout_alignParentRight="true">
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/voice_result_text_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_play_text"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_margin="@dimen/ic_margin" />
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/mark_result_text_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_mark_dark"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_marginLeft="@dimen/ic_margin"
-                    android:layout_marginBottom="@dimen/ic_margin"
-                    android:layout_marginRight="@dimen/ic_margin" />
-
-            </android.support.v7.widget.LinearLayoutCompat>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/result_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/between_content"
-                android:paddingLeft="@dimen/between_content"
-                android:paddingTop="@dimen/between_content"
-                android:paddingRight="@dimen/between_content"
-                android:paddingBottom="@dimen/between_content"
-                android:layout_toLeftOf="@id/button_bar"
-                android:textSize="20sp"
-                android:text="Text"/>
+                android:padding="@dimen/between_content"
+                android:textColor="@color/colorBlack"
+                android:hint="@string/hint_result_text"
+                android:textSize="20sp"/>
 
-            <ScrollView
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/dictionaryArticle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/button_bar"
-                android:layout_below="@id/result_text_view"
-                android:scrollbars="none">
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:id="@+id/dictionaryArticle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/bottom_margin_for_content"
-                    android:layout_margin="@dimen/between_content"/>
-            </ScrollView>
+                android:orientation="vertical"
+                android:layout_margin="@dimen/between_content"
+                android:padding="@dimen/between_content"/>
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/api_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/between_content"
+                android:padding="@dimen/between_content"
+                android:textColor="@color/colorBlack"
+                android:text="@string/api_help"
+                android:textSize="16sp"
+                android:visibility="invisible"/>
 
-        </RelativeLayout>
+        </android.support.v7.widget.LinearLayoutCompat>
 
     </android.support.v7.widget.LinearLayoutCompat>
 </ScrollView>

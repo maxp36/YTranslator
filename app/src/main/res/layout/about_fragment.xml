@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/about"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:padding="@dimen/between_content"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textSize="24sp"
+        android:textColor="@color/colorWhite"
+        android:text="@string/text_about"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/about_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="About text"/>
+        android:layout_below="@+id/about"
+        android:padding="@dimen/between_content"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
+        android:textColorLink="@color/colorAccent"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:text="@string/about"/>
 
-</LinearLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/between_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
+        android:text="@string/version"/>
+
+</RelativeLayout>

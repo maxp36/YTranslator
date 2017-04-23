@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarTranslate"
@@ -17,13 +19,15 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:minHeight="?attr/actionBarSize" />
+            android:minHeight="?attr/actionBarSize"
+            app:tabTextColor="@color/colorWhite"
+            app:tabSelectedTextColor="@color/colorSecondary" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/button_remove_items"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/ic_margin"
+            android:padding="@dimen/ic_margin"
             android:src="@mipmap/ic_delete"
             android:background="?android:selectableItemBackground"
             android:layout_alignRight="@id/tab_layout"

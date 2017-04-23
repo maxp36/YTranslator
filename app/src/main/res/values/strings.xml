@@ -1,13 +1,24 @@
 <resources>
     <string name="app_name">YTranslator</string>
+
     <string name="text_translator">Переводчик</string>
     <string name="text_mark">История</string>
-    <string name="text_settings">Настройки</string>
+    <string name="text_about">О приложении</string>
 
+    <string name="history_tab">История</string>
+    <string name="favorites_tab">Избранное</string>
 
-    <string name="settings_language_summary">Выберите язык</string>
-    <string name="settings_language_title">Язык</string>
-    <string name="settings_language_default_value">ru</string>
+    <string name="hint_translator_edit_text">Введите текст</string>
+    <string name="hint_search_edit_text">Введите запрос</string>
+    <string name="hint_result_text">Перевод</string>
+
+    <string name="about">Приложение разработано в качестве тестового задания для поступления в
+        Школу мобильной разработки Яндекса в рамках проекта \"Мобилизация\".
+        \nДля перевода использовались сервисы \"Яндекс Переводчик\": translate.yandex.ru
+        \nи \"Яндекс Словарь\": tech.yandex.ru/dictionary</string>
+
+    <string name="api_help">Переведено сервисом \"Яндекс.Переводчик\"\nРеализовано с помощью сервиса \"Яндекс.Словарь\"</string>
+    <string name="version">Версия 1.0</string>
 
     <array name="settings_language_entries">
         <item>Русский</item>

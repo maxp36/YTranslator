@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.test.maxp36.ytranslator"
+        applicationId "com.development.maxp36.ytranslator"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1

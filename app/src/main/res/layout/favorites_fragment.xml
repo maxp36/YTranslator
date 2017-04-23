@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/favorites_search_edit_text"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Введите запрос"/>
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/favorites_search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/right_padding_for_search"
+            android:textColor="@color/colorBlack"
+            android:hint="@string/hint_search_edit_text"/>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/clear_favorites_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/favorites_search_edit_text"
+            android:src="@mipmap/ic_close"
+            android:padding="@dimen/ic_margin"
+            android:background="?android:selectableItemBackground"/>
+
+    </RelativeLayout>
 
     <android.support.v7.widget.ListViewCompat
         android:id="@+id/favorites_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/bottom_margin_for_content"
-        android:divider="@color/colorGray"
+        android:divider="@color/colorGrayDark"
         android:dividerHeight="@dimen/divider_height"
-        android:listSelector="@drawable/list_selector"
+        android:headerDividersEnabled="true"
         android:choiceMode="multipleChoice"/>
 
 </LinearLayout>
